@@ -17,15 +17,16 @@ from django.conf import settings
 from django.urls import path,include
 from django.contrib import admin
 from django.conf.urls.static import static
-
+from sozluk.views import home
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path("",home,name="anasayfa"),
     path("api/",include('sozluk.api.urls')),
-    path("user/api/",include("profilo.api.urls")),
     path("api-auth/",include('rest_framework.urls')),
     #path("rest-auth/", include('rest_auth.urls')),
+
 ]
 
-if settings.DEBUG==True: #TODO buraya unutma
-    urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
+#if settings.DEBUG==True: #TODO buraya unutma
+urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

@@ -1,56 +1,9 @@
-from rest_framework import status
-from rest_framework.response import Response
-from rest_framework.decorators import api_view
-from rest_framework.views import APIView
-from ..models import Word, Comment
-from .serializers import WordSerializer,CommentCreateSerializer
-################################# function based  api_view decoratör ile
-@api_view(['GET','POST'])
-def word_listele_create_api_view(request):
-    if request.method=='GET':
-        model=Word.objects.all()
-        serializer=WordSerializer(model,many=True)
-
-        return Response(serializer.data,status=status.HTTP_200_OK)
-
-    if request.method=="POST":
-        serializer=WordSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data,status=status.HTTP_201_CREATED)
-        return Response( serializer.errors,status=status.HTTP_400_BAD_REQUEST)
-
-################################# class based APIView
-
-class WordListCreateApiView(APIView):
-
-    def get(self,request):
-        model = Word.objects.all()
-        serializer = WordSerializer(model, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    def post(self,request):
-        serializer = WordSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-#################################   class based Generec api views and Mixins
-from rest_framework.generics import GenericAPIView # genericapiview mixinler için base sınıftır
-from rest_framework.mixins import ListModelMixin,CreateModelMixin
-
-
-class WordListGenericApiView(ListModelMixin,CreateModelMixin,GenericAPIView):
-    queryset = Word.objects.all()
-    serializer_class = WordSerializer
-
-    def get(self,request,*args,**kwargs):
-        return self.list(request,*args,**kwargs)
-
-
-    def post(self,request,*args,**kwargs):
-        return self.create(request,*args,**kwargs)
+#from rest_framework import status
+#from rest_framework.response import Response
+#from rest_framework.decorators import api_view
+#from rest_framework.views import APIView
+from ..models import Word
+from .serializers import WordSerializer
 
 
 # concrete Viewslar
@@ -63,7 +16,7 @@ class WordListCreateApiView(ListCreateAPIView):
     throttle_scope='hasan'
     queryset = Word.objects.all()
     serializer_class = WordSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAdminOrReadOnly]
     pagination_class = SmallPagination
 
 class WordDetailUpdateApiView(RetrieveUpdateAPIView):
@@ -91,7 +44,63 @@ class WordDetailUpdateApiView(RetrieveUpdateAPIView):
 
 
 
-class CommentCreateApiView(CreateAPIView):
+
+
+
+################################# function based  api_view decoratör ile
+'''@api_view(['GET','POST'])
+def word_listele_create_api_view(request):
+    if request.method=='GET':
+        model=Word.objects.all()
+        serializer=WordSerializer(model,many=True)
+
+        return Response(serializer.data,status=status.HTTP_200_OK)
+
+    if request.method=="POST":
+        serializer=WordSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data,status=status.HTTP_201_CREATED)
+        return Response( serializer.errors,status=status.HTTP_400_BAD_REQUEST)'''
+
+################################# class based APIView
+'''
+class WordListCreateApiView(APIView):
+
+    def get(self,request):
+        model = Word.objects.all()
+        serializer = WordSerializer(model, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self,request):
+        serializer = WordSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)'''
+
+#################################   class based Generec api views and Mixins
+'''from rest_framework.generics import GenericAPIView # genericapiview mixinler için base sınıftır
+from rest_framework.mixins import ListModelMixin,CreateModelMixin
+
+
+class WordListGenericApiView(ListModelMixin,CreateModelMixin,GenericAPIView):
+    queryset = Word.objects.all()
+    serializer_class = WordSerializer
+
+    def get(self,request,*args,**kwargs):
+        return self.list(request,*args,**kwargs)
+
+
+    def post(self,request,*args,**kwargs):
+        return self.create(request,*args,**kwargs)'''
+
+
+
+
+
+#Comment section
+'''class CommentCreateApiView(CreateAPIView):
     throttle_scope='hasan'
     queryset = Comment
     serializer_class = CommentCreateSerializer
@@ -107,6 +116,6 @@ class CommentDetailApiView(RetrieveUpdateDestroyAPIView):
     throttle_scope='hasan'
     queryset = Comment.objects.all()
     serializer_class = CommentCreateSerializer
-    permission_classes = [IsYorumSahibiOrReadOnly]
+    permission_classes = [IsYorumSahibiOrReadOnly]'''
 
 

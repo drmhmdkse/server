@@ -9,14 +9,11 @@ class Word(models.Model):
     voice=models.CharField(max_length=252)
     partOfSpeech=models.CharField(max_length=77)
     example=models.CharField(max_length=567)
-    
-    
-
-
-
 
     def __str__(self):
         return self.name
+
+
 
 
 class Comment(models.Model):
