@@ -12,6 +12,7 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from .permissions import IsAdminOrReadOnly,IsYorumSahibiOrReadOnly
 from .pagination import SmallPagination,LargePagination
 
+
 class WordListCreateApiView(ListCreateAPIView):
     throttle_scope='hasan'
     queryset = Word.objects.all()
@@ -19,14 +20,16 @@ class WordListCreateApiView(ListCreateAPIView):
     permission_classes = [IsAdminOrReadOnly]
     pagination_class = SmallPagination
 
+
 class WordDetailUpdateApiView(RetrieveUpdateAPIView):
-    throttle_scope='hasan' #### settingslerde throttle rate altında kullanılabilir
-    lookup_field="name"
+    throttle_scope = 'hasan'  # settingslerde throttle rate altında kullanılabilir
+    lookup_field = "name"
     queryset = Word.objects.all()
     serializer_class = WordSerializer
     permission_classes = [IsAdminOrReadOnly]
 
-    #get metodunu override ettik
+
+    # get metodunu override ettik
     def get(self, request, *args, **kwargs): # kwargs bize lookup field değerini döner
         word_name=kwargs.get("name")
         try:
