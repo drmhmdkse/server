@@ -2,6 +2,8 @@
 #from rest_framework.response import Response
 #from rest_framework.decorators import api_view
 #from rest_framework.views import APIView
+from rest_framework.response import Response
+
 from ..models import Word
 from .serializers import WordSerializer
 
@@ -24,26 +26,38 @@ class WordListCreateApiView(ListCreateAPIView):
 class WordDetailUpdateApiView(RetrieveUpdateAPIView):
     throttle_scope = 'hasan'  # settingslerde throttle rate altında kullanılabilir
     lookup_field = "name"
-    queryset = Word.objects.all()
+    #queryset = Word.objects.all()
     serializer_class = WordSerializer
     permission_classes = [IsAdminOrReadOnly]
 
+    def get_queryset(self):
+        self.kwargs["name"]=self.kwargs.get("name").lower()
+        word_name: str = str(self.kwargs.get("name")).lower()
+        word_instance = Word.objects.all()
+        try:
+            word_instance = Word.objects.filter(name=word_name)
+            if word_instance.count()<1:
+                raise Word.DoesNotExist
+        except Word.DoesNotExist:
+
+            if word_name == word_name.lstrip().rstrip():
+
+                from scripts.cambridge import kelimeTara
+                try:
+                    sonuc = kelimeTara(word_name)
+                    instancemiz = Word.objects.create(name=sonuc.get("kelime"),description=sonuc.get("description"),voice=sonuc.get("usSoundLink"),partOfSpeech=sonuc.get("nitelik"),example=sonuc.get("example"))
+                    instancemiz.save()
+                except:
+                    print("cambridge problems")
+
+        return word_instance
+
 
     # get metodunu override ettik
-    def get(self, request, *args, **kwargs): # kwargs bize lookup field değerini döner
-        word_name=kwargs.get("name")
-        try:
-            word_instance=Word.objects.get(name=word_name)
-        except Word.DoesNotExist:
-            from scripts.cambridge import kelimeTara
-            try:
-                sonuc=kelimeTara(word_name)
-                instancemiz=Word.objects.create(name=sonuc.get("kelime"),description=sonuc.get("description"),voice=sonuc.get("usSoundLink"),partOfSpeech=sonuc.get("nitelik"),example=sonuc.get("example"))
-                instancemiz.save()
-            except:
-                pass
 
-        return self.retrieve(request, *args, **kwargs)
+
+
+
 
 
 
