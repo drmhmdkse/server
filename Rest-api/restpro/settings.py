@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
-
+import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-#9j6snu7u7d5u$kl_0m)@521l-ck6(w1t1vuc*$e(6pf708147
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["138.68.92.126"]  #*138.68.92.126
+ALLOWED_HOSTS = ["138.68.92.126"]  # *138.68.92.126
 
 
 # Application definition
@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     "rest_framework",
-    #"rest_framework.authtoken", #bunu ekleyince migrate işlemi yapmamız lazım
     "sozluk",
 ]
 
@@ -80,14 +79,14 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'databasepostgresql',
-        'USER':'databasepostgresql_user',
-        'PASSWORD':'databasepostgresql_password',
-        'HOST':'databasepostgresql',
-        'PORT':'5432'
+        'USER': 'databasepostgresql_user',
+        'PASSWORD': 'databasepostgresql_password',
+        'HOST': 'databasepostgresql',
+        'PORT': '5432'
     }
 }
 # rest framework
-REST_FRAMEWORK = { # bu genel olarak tüm viewlerda geçerlidir taaa ki view içinde değiştirilmeyene kadar hiç kullanmasakta olur
+REST_FRAMEWORK = { # bu genel olarak tüm viewlerda geçerlidir taa ki view içinde değiştirilmeyene kadar hiç kullanmasakta olur
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ],
@@ -101,8 +100,8 @@ REST_FRAMEWORK = { # bu genel olarak tüm viewlerda geçerlidir taaa ki view iç
     'DEFAULT_THROTTLE_CLASSES': [
         'rest_framework.throttling.ScopedRateThrottle'
     ],
-     'DEFAULT_THROTTLE_RATES': {
-        "hasan":"33/hour"
+    'DEFAULT_THROTTLE_RATES': {
+        "hasan": "33/hour"
     }
 
 
@@ -143,17 +142,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
-MEDIA_URL='media/'
-import os
-STATIC_ROOT=os.path.join(os.path.dirname(os.path.dirname(BASE_DIR)),'opt/services/djangoapp/static')
-MEDIA_ROOT=os.path.join(os.path.dirname(os.path.dirname(BASE_DIR)),'opt/services/djangoapp/media')
+MEDIA_URL = 'media/'
+
+STATIC_ROOT = os.path.join(os.path.dirname(os.path.dirname(BASE_DIR)), 'opt/services/djangoapp/static')
+MEDIA_ROOT = os.path.join(os.path.dirname(os.path.dirname(BASE_DIR)), 'opt/services/djangoapp/media')
 
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-#dememe 1 
-
-
