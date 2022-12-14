@@ -14,6 +14,7 @@ class Word(models.Model):
         return self.name
 
 
+# that section does not use yet
 class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comment", default=1)
     word = models.ForeignKey(Word, on_delete=models.CASCADE, related_name="wordComment")
