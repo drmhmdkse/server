@@ -1,7 +1,11 @@
-from ..models import Word
-from .serializers import WordSerializer
+from ..models import Word, Comment
+from .serializers import WordSerializer, CommentSerializer
 from .pagination import SmallPagination
 from rest_framework import viewsets
+from rest_framework import mixins
+# from rest_framework.decorators import action #todo use that module
+from .permissions import IsAdminOrReadOnly, IsYorumSahibiOrReadOnly
+from rest_framework.permissions import IsAuthenticated
 
 
 class WordViewSet(viewsets.ReadOnlyModelViewSet):
@@ -38,3 +42,26 @@ class WordViewSet(viewsets.ReadOnlyModelViewSet):
             return word_instance
 
         return word_instance
+
+
+class CommentDetailCreateViewSet(mixins.CreateModelMixin,
+                                 mixins.DestroyModelMixin,
+                                 mixins.RetrieveModelMixin,
+                                 mixins.ListModelMixin,
+                                 viewsets.GenericViewSet):
+    throttle_scope = 'hasan'
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    pagination_class = SmallPagination
+
+    def get_permissions(self):
+        if self.action == "destroy":
+            permission_classes = [IsYorumSahibiOrReadOnly]
+        else:
+            permission_classes = [IsAuthenticated]
+
+        return [permission() for permission in permission_classes]
+
+
+
+
