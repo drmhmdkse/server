@@ -4,7 +4,7 @@ from sozluk.models import Word, Comment
 
 class CommentSerializer(serializers.ModelSerializer):
     user = serializers.StringRelatedField(read_only=True)  # amaç userin aydisini değilde modelde __str__ ile dönen değeri çekmek
-    word = serializers.StringRelatedField(read_only=True)
+    word = serializers.StringRelatedField()
 
     class Meta:
         model = Comment
