@@ -5,7 +5,7 @@ from rest_framework import viewsets
 from rest_framework import mixins
 # from rest_framework.decorators import action #todo use that module
 from .permissions import IsAdminOrReadOnly, IsYorumSahibiOrReadOnly
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 
 
 class WordViewSet(viewsets.ReadOnlyModelViewSet):
@@ -13,6 +13,7 @@ class WordViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Word.objects.all()
     serializer_class = WordSerializer
     pagination_class = SmallPagination
+    permission_classes = [IsAdminOrReadOnly]
     lookup_field = "name"
 
     def get_queryset(self):
@@ -57,8 +58,10 @@ class CommentDetailCreateViewSet(mixins.CreateModelMixin,
     def get_permissions(self):
         if self.action == "destroy":
             permission_classes = [IsYorumSahibiOrReadOnly]
-        else:
+        elif self.action == "create":
             permission_classes = [IsAuthenticated]
+        else:
+            permission_classes = [IsAuthenticatedOrReadOnly]
 
         return [permission() for permission in permission_classes]
 

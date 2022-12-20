@@ -88,7 +88,7 @@ DATABASES = {
 # rest framework
 REST_FRAMEWORK = { # bu genel olarak tüm viewlerda geçerlidir taa ki view içinde değiştirilmeyene kadar hiç kullanmasakta olur
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',  # this perm is ideal for this app
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 2,

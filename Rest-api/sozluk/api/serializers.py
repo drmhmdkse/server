@@ -1,27 +1,25 @@
 from rest_framework import serializers
-from sozluk.models import Word,Comment
+from sozluk.models import Word, Comment
 
 
 class CommentSerializer(serializers.ModelSerializer):
-    user=serializers.StringRelatedField(read_only=True) # amaç userin aydisini değilde modelde __str__ ile dönen değeri çekmek
+    user = serializers.StringRelatedField(read_only=True)  # amaç userin aydisini değilde modelde __str__ ile dönen değeri çekmek
+    word = serializers.StringRelatedField(read_only=True)
+
     class Meta:
-        model=Comment
-        fields="__all__"
+        model = Comment
+        fields = "__all__"
 
 
 class WordSerializer(serializers.ModelSerializer):
-    wordComment = CommentSerializer(read_only=True,many=True) # burada wordCommenti modelde related name ile kullandığımız ad ile çektik
-    class Meta:
-        model=Word
-        exclude= ["id"]
-        #fields='__all__'
+    wordComment = CommentSerializer(read_only=True, many=True)  # burada wordCommenti modelde related name ile kullandığımız ad ile çektik
 
-    def validate_name(self,value): # validated_<sütun> bununla sadece bir sutun validate edilir
+    class Meta:
+        model = Word
+        exclude = ["id"]
+
+    def validate_name(self, value):  # validated_<sütun> bununla sadece bir sutun validate edilir
         for i in value.lower():
-            if i in {"ı","ö","ü","ç"}:
+            if i in {"ı", "ö", "ü", "ç"}:
                 raise serializers.ValidationError("please enter english char")
         return value
-
-
-
-
