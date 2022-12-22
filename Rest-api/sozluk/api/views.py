@@ -3,10 +3,9 @@ from .serializers import WordSerializer, CommentSerializer
 from .pagination import SmallPagination
 from rest_framework import viewsets
 from rest_framework import mixins
-# from rest_framework.decorators import action #todo use that module
 from .permissions import IsAdminOrReadOnly, IsYorumSahibiOrReadOnly
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
-
+# todo test yap
 
 class WordViewSet(viewsets.ReadOnlyModelViewSet):
     throttle_scope = 'hasan'
@@ -65,6 +64,6 @@ class CommentDetailCreateViewSet(mixins.CreateModelMixin,
 
         return [permission() for permission in permission_classes]
 
-
-
-
+    def perform_create(self, serializer):
+        user = self.request.user
+        serializer.save(user=user)
