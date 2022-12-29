@@ -23,3 +23,6 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.content
+
+    def get_students(self):
+        return Comment.objects.all().order_by("name")

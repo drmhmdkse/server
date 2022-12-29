@@ -23,10 +23,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-#9j6snu7u7d5u$kl_0m)@521l-ck6(w1t1vuc*$e(6pf708147'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
 
-ALLOWED_HOSTS = ["138.68.92.126"]  # *138.68.92.126
-
+PRODUCTION = True
+if PRODUCTION is False:
+    DEBUG = True
+    ALLOWED_HOSTS = ["*"]  # *138.68.92.126
+else:
+    DEBUG = False
+    ALLOWED_HOSTS = ["138.68.92.126"]  # *138.68.92.126
 
 # Application definition
 
@@ -75,16 +79,12 @@ WSGI_APPLICATION = 'restpro.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'databasepostgresql',
-        'USER': 'databasepostgresql_user',
-        'PASSWORD': 'databasepostgresql_password',
-        'HOST': 'databasepostgresql',
-        'PORT': '5432'
-    }
-}
+if PRODUCTION is False:
+    from .development import database
+    DATABASES = database(BASE_DIR)
+else:
+    from .production import database
+    DATABASES = database()
 # rest framework
 REST_FRAMEWORK = { # bu genel olarak tüm viewlerda geçerlidir taa ki view içinde değiştirilmeyene kadar hiç kullanmasakta olur
     'DEFAULT_PERMISSION_CLASSES': [
@@ -101,7 +101,7 @@ REST_FRAMEWORK = { # bu genel olarak tüm viewlerda geçerlidir taa ki view içi
         'rest_framework.throttling.ScopedRateThrottle'
     ],
     'DEFAULT_THROTTLE_RATES': {
-        "hasan": "33/hour"
+        "hasan": "46/hour"
     }
 
 
@@ -144,9 +144,13 @@ USE_TZ = True
 STATIC_URL = 'static/'
 MEDIA_URL = 'media/'
 
-STATIC_ROOT = os.path.join(os.path.dirname(os.path.dirname(BASE_DIR)), 'opt/services/djangoapp/static')
-MEDIA_ROOT = os.path.join(os.path.dirname(os.path.dirname(BASE_DIR)), 'opt/services/djangoapp/media')
-
+if PRODUCTION is False:
+    STATIC_ROOT = BASE_DIR / "static"
+    MEDIA_ROOT = BASE_DIR / "media"
+else:
+    from .production import mediaroot, staticroot
+    STATIC_ROOT = staticroot(os, BASE_DIR)
+    MEDIA_ROOT = mediaroot(os,BASE_DIR)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
