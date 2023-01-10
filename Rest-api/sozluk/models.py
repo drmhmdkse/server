@@ -1,5 +1,4 @@
 from django.db import models
-from django.contrib.auth.models import User
 # Create your models here.
 
 
@@ -16,13 +15,10 @@ class Word(models.Model):
 
 # that section does not use yet
 class Comment(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comment", default=1)
+    user = models.ForeignKey('account.CustomUser', on_delete=models.CASCADE, related_name="comment", default=1)
     word = models.ForeignKey(Word, on_delete=models.CASCADE, related_name="wordComment")
     content = models.CharField(max_length=255)
     commentDate = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
     def __str__(self):
         return self.content
-
-    def get_students(self):
-        return Comment.objects.all().order_by("name")

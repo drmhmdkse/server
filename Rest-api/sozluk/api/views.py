@@ -5,14 +5,18 @@ from rest_framework import viewsets
 from rest_framework import mixins
 from .permissions import IsAdminOrReadOnly, IsYorumSahibiOrReadOnly
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.authentication import SessionAuthentication
 # todo test yap
+
 
 class WordViewSet(viewsets.ReadOnlyModelViewSet):
     throttle_scope = 'hasan'
     queryset = Word.objects.all()
+    authentication_classes = [JWTAuthentication, SessionAuthentication]
     serializer_class = WordSerializer
     pagination_class = SmallPagination
-    permission_classes = [IsAdminOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly]
     lookup_field = "name"
 
     def get_queryset(self):
@@ -53,6 +57,7 @@ class CommentDetailCreateViewSet(mixins.CreateModelMixin,
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     pagination_class = SmallPagination
+    #authentication_classes = [JWTAuthentication]
 
     def get_permissions(self):
         if self.action == "destroy":

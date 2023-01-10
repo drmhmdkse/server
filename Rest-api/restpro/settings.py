@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
-
+from datetime import timedelta
 from pathlib import Path
 import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -42,7 +42,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     "rest_framework",
+    "rest_framework_simplejwt",
     "sozluk",
+    "account",
 ]
 
 MIDDLEWARE = [
@@ -87,13 +89,10 @@ else:
     DATABASES = database()
 # rest framework
 REST_FRAMEWORK = { # bu genel olarak tüm viewlerda geçerlidir taa ki view içinde değiştirilmeyene kadar hiç kullanmasakta olur
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticatedOrReadOnly',  # this perm is ideal for this app
-    ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 2,
     'DEFAULT_AUTHENTICATION_CLASSES': [
-            'rest_framework.authentication.BasicAuthentication',
+            'rest_framework_simplejwt.authentication.JWTAuthentication',
             'rest_framework.authentication.SessionAuthentication',
         ],
 
@@ -101,10 +100,14 @@ REST_FRAMEWORK = { # bu genel olarak tüm viewlerda geçerlidir taa ki view içi
         'rest_framework.throttling.ScopedRateThrottle'
     ],
     'DEFAULT_THROTTLE_RATES': {
+        "registerthrottle": "5/hour",
         "hasan": "46/hour"
     }
-
-
+}
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(seconds=30),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=15),
+    "ROTATE_REFRESH_TOKENS": True,
 }
 
 # Password validation
@@ -150,9 +153,12 @@ if PRODUCTION is False:
 else:
     from .production import mediaroot, staticroot
     STATIC_ROOT = staticroot(os, BASE_DIR)
-    MEDIA_ROOT = mediaroot(os,BASE_DIR)
+    MEDIA_ROOT = mediaroot(os, BASE_DIR)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# custom user model
+AUTH_USER_MODEL = 'account.CustomUser'
