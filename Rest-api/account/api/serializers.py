@@ -29,17 +29,23 @@ class UserChangePassword(serializers.Serializer):
 
 
 class UserRegister(serializers.ModelSerializer):
+    password = serializers.CharField(required=True)
     class Meta:
         model = CustomUser
         fields = ("username", "first_name", "email", "password")
 
+
+    def validate_password(self, value):
+            validate_password(value)
+            return value
     def create(self, validated_data):
         username = validated_data.get("username")
         first_name = validated_data.get("first_name")
         email = validated_data.get("email")
         password = validated_data.get("password")
 
-        user = CustomUser.objects.create(username=username, email=email, password=password, first_name=first_name)
+        user = CustomUser.objects.create(username=username, email=email, first_name=first_name)
+        user.set_password(password)
         user.save()
         return user
 
