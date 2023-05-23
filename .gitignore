@@ -5,5 +5,7 @@ __pycache__/
 
 db.sqlite3
 
-reqs.txt    
 
+Rest-api/Pipfile
+Rest-api/Pipfile.lock
+Rest-api/reqs.txt
