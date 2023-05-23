@@ -1,4 +1,4 @@
-from rest_framework.test import APITestCase, APIClient
+from rest_framework.test import APITestCase
 from django.urls import reverse
 from account.models import CustomUser
 
@@ -11,10 +11,10 @@ class UserRegistrationTestCase(APITestCase):
     def test_user_registration(self):
 
         data = {
-            "username": "durdu",
-            "password": "Durdu.1965",
+            "username": "test",
+            "password": "Test.1881",
             "first_name": "Durdu",
-            "email": "drmhmdka@hotmail.com"
+            "email": "test@gmail.com"
         }
         response = self.client.post(self.url, data)
         self.assertEqual(201, response.status_code)  # 201 mean is created
@@ -23,10 +23,10 @@ class UserRegistrationTestCase(APITestCase):
     def test_user_invalid_password(self):
 
         data = {
-            "username": "durdu",
-            "password": "1", # django için geçeersiz şifre
+            "username": "test",
+            "password": "1",  # django için geçeersiz şifre
             "first_name": "Durdu",
-            "email": "drmhmdka@hotmail.com"
+            "email": "test@gmail.com"
         }
 
         response = self.client.post(self.url, data)
@@ -36,10 +36,10 @@ class UserRegistrationTestCase(APITestCase):
     def test_unique_name(self):
         self.test_user_registration()
         data = {
-            "username": "durdu",
-            "password": "Durdu.1965",
+            "username": "test",
+            "password": "Test.1881",
             "first_name": "Durdu",
-            "email": "drmhmdka@hotmail.com"
+            "email": "test@gmail.com"
         }
 
         response = self.client.post(self.url, data)
@@ -51,7 +51,7 @@ class UserRegistrationTestCase(APITestCase):
                     session ile giriş yapmış kullanıcı sayfayı görememeli.
         """
         self.test_user_registration()
-        self.client.login(username="durdu", password="Durdu.1965")
+        self.client.login(username="test", password="Test.1881")
         response = self.client.get(self.url)
         self.assertEqual(403, response.status_code)
 
@@ -62,10 +62,10 @@ class UserRegistrationTestCase(APITestCase):
         """
         self.test_user_registration()
         data = {
-            "username": "durdu",
-            "password": "Durdu.1965",
+            "username": "test",
+            "password": "Test.1881",
             "first_name": "Durdu",
-            "email": "drmhmdka@hotmail.com"
+            "email": "test@gmail.com"
         }
         response = self.client.post(self.url_login, data)
         self.assertEqual(200, response.status_code)
@@ -79,18 +79,18 @@ class UserLogin(APITestCase):
     url_login = reverse("token_obtain_pair")
 
     def setUp(self):
-        self.username = "durdu"
-        self.password = "Durdu.1965"
+        self.username = "test"
+        self.password = "Test.1881"
         self.user = CustomUser.objects.create_user(username=self.username, password=self.password)
 
     # Ok
     def test_user_token(self):
-        response = self.client.post(self.url_login, {"username": "durdu", "password": "Durdu.1965"})
+        response = self.client.post(self.url_login, {"username": "test", "password": "Test.1881"})
         self.assertEqual(200, response.status_code)
 
     # Ok
     def test_user_invalid_data(self):
-        response = self.client.post(self.url_login, {"username": "invalidusername", "password": "Durdu.1965"})
+        response = self.client.post(self.url_login, {"username": "invalidusername", "password": "Test.1881"})
         self.assertEqual(401, response.status_code)
 
     # Ok
