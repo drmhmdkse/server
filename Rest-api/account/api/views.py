@@ -50,7 +50,7 @@ class UserRegisterApiView(CreateAPIView):
 
 class UserEditApiView(RetrieveUpdateDestroyAPIView):
     serializer_class = UserEditSerializer
-    permission_classes = [IsOwner]
+    permission_classes = [IsOwner,IsAuthenticated]
     lookup_field = "id"
     throttle_scope = 'hasan'
 

@@ -36,6 +36,7 @@ urllib3 = "==1.26.13"
 psycopg2 = "*"
 djangorestframework-simplejwt = "*"
 django-cors-headers = "*"
+python-dotenv = "*"
 
 [dev-packages]
 

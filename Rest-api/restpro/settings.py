@@ -1,7 +1,9 @@
 from datetime import timedelta
 from pathlib import Path
 import os
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+from dotenv import load_dotenv
+
+load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -9,17 +11,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-#9j6snu7u7d5u$kl_0m)@521l-ck6(w1t1vuc*$e(6pf708147'
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
 PRODUCTION = True
 if PRODUCTION is False:
-    DEBUG = False
-    ALLOWED_HOSTS = [] # *138.68.92.126
+    DEBUG = True
+    ALLOWED_HOSTS = []
 else:
     DEBUG = True
-    ALLOWED_HOSTS = ["*"]  # *138.68.92.126
+    ALLOWED_HOSTS = [os.getenv("IP_ADD")] # 138.68.92.126
     #CORS_ORIGIN_ALLOW_ALL = False
     CORS_ORIGIN_WHITELIST = (
         'http://localhost:3000',
@@ -73,8 +75,6 @@ WSGI_APPLICATION = 'restpro.wsgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-
 if PRODUCTION is False:
     from .development import database
     DATABASES = database(BASE_DIR)
